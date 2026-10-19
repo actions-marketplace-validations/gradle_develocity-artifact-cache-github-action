@@ -145,10 +145,10 @@ and the job should authenticate with workload identity anyway.
 
 The action logs which credential it selected, or the rule that made it skip. Outside
 `develocity-auth: workload-identity`, a key that is set is never replaced by an OIDC token.
-The action **warns and skips all cache activity for the job** when that key is not in
-`host=key` form or has no entry for the endpoint host. It skips the same way when neither
-credential is available, and it never fails the build over either. Pull requests from forks
-are such a case, because GitHub gives them neither secrets nor OIDC tokens.
+When the action cannot use that key (see [Access key](#access-key)), it **warns and skips
+all cache activity for the job**. It skips the same way when neither credential is available,
+and it never fails the build over either. Pull requests from forks
+have neither credential, because GitHub gives them neither secrets nor OIDC tokens.
 
 ### Access key
 
