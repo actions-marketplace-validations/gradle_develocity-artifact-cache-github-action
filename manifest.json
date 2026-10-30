@@ -1,6 +1,6 @@
 {
-  "version": "1.8.0",
-  "sha256": "ab01cac319a5a5117f3a18a1e0236d351360f9d63db8298ce51b232ffa070121",
+  "version": "1.10.0",
+  "sha256": "664bfb44046db0fccb2518fff2e38eaa4c3e1ec2265adc54de6f3f30ee869db3",
   "minimumJdkVersion": 21,
   "minimumEdgeVersionForAssetServing": "2.3.0",
   "knownVersions": {
@@ -24,6 +24,12 @@
     },
     "1.7.1": {
       "sha256": "6c75dd86f82469e5aea33dcfb56c4087329f2f7454c0ba5bd17b3e25f68de59a"
+    },
+    "1.8.0": {
+      "sha256": "ab01cac319a5a5117f3a18a1e0236d351360f9d63db8298ce51b232ffa070121"
+    },
+    "1.9.0": {
+      "sha256": "dc53cbb291e1ccc775365a7548fdd8e6f1d02333b35230a9d0b8d0128e1715e6"
     }
   }
 }

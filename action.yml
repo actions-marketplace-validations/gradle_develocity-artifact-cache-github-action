@@ -1,5 +1,5 @@
 name: Develocity Artifact Cache GitHub Action
-description: Restore and store Gradle, Maven, npm, pip, and Sonar build dependencies through the Develocity Artifact Cache.
+description: Restore and store Gradle, Maven, npm, pip, Sonar, Playwright, Cypress, and Docker caches with the Develocity Artifact Cache.
 author: Develocity
 
 # Marketplace listing branding. Matches the gradle/actions house style (color:
@@ -14,6 +14,8 @@ inputs:
     description: >-
       Develocity server URL, passed to the AC CLI as --dv-server. Provide exactly
       one of develocity-url or develocity-edge-url — they are mutually exclusive.
+      Must be an http or https URL with no credentials, query string, fragment
+      or embedded control character.
     required: false
   develocity-edge-url:
     description: >-
@@ -21,7 +23,8 @@ inputs:
       directly instead of a server. Provide exactly one of develocity-url or
       develocity-edge-url — they are mutually exclusive. Whichever is set also
       identifies the Develocity host for the access-key lookup and short-lived
-      token exchange.
+      token exchange. Must be an http or https URL with no credentials,
+      query string, fragment or embedded control character.
     required: false
   develocity-auth:
     description: >-
@@ -68,7 +71,8 @@ inputs:
       Lifetime, in hours, of the short-lived Develocity token the action obtains
       from its credential (the access key or the GitHub OIDC token) for its own
       cache restore/store. Defaults to 2. The main and post steps each obtain
-      their own token, so it only has to cover one cache operation.
+      their own token, so it only has to cover one cache operation. A value that
+      is not a whole number fails the step.
     required: false
     default: "2"
   image-names:
@@ -81,6 +85,14 @@ inputs:
     description: When true, skip the post-step store call.
     required: false
     default: "false"
+  enable-docker-builders:
+    description: >-
+      When true, also cache the base images that running buildx builders
+      (docker-container driver) pulled, and copy them into every running builder
+      on restore. The builder must exist for both phases, so run
+      docker/setup-buildx-action before this action.
+    required: false
+    default: "false"
   cli-version:
     description: >-
       AC CLI version to download. Defaults to the pinned general-availability
@@ -91,10 +103,14 @@ inputs:
       JAR download source: the directory holding the JARs, which the action
       requests as <cli-repository>/develocity-artifact-cache-cli-<version>.jar,
       the same layout as the Jenkins plugin's cliRepository. Defaults to the
-      edge route when an edge-capable Develocity node is detected, otherwise
-      the public Develocity download directory. Set to an internal mirror for
-      air-gapped runners; an explicit value always wins over the edge route.
-      Must be an https URL unless cli-repository-allow-insecure is true.
+      edge route when the action detects an edge-capable Develocity node,
+      otherwise the public Develocity download directory. Set to an internal
+      mirror for air-gapped runners. An explicit value always wins over the edge route.
+      Must be an https URL unless cli-repository-allow-insecure is true. It must
+      carry no credentials, query string, fragment or embedded control character. The hostname must be an
+      IPv4 address, an IPv6 address in square brackets,
+      or dot-separated labels of letters, digits and hyphens. No label may start or end with a hyphen. A name of
+      more than one label must end in a label that starts with a letter.
     required: false
   cli-repository-header:
     description: >-
@@ -143,8 +159,9 @@ inputs:
   cli-sha256:
     description: >-
       Expected JAR SHA-256. Required when cli-version pins a version the
-      distribution manifest does not list: the action never runs an unverified
-      JAR, so without it that version is refused and caching is skipped.
+      distribution manifest does not list. The action never runs an unverified
+      JAR, so without cli-sha256 it refuses that version and skips caching.
+      Setting it without cli-version fails the step.
     required: false
   additional-cli-args:
     description: >-
