@@ -10,7 +10,7 @@
   "layers": [
     {
       "mediaType": "application/vnd.oci.image.layer.v1.tar",
-      "digest": "sha256:f38fd559fa3042859082814ccad2ea1722b7f9488ec6b8e832b5db3c3f676216",
+      "digest": "sha256:8c2e3e7f006fc8be818c169ae30db6e08b0e377d1e485820cb0d90caa74d91ab",
       "size": 1349632
     }
   ],

@@ -18,8 +18,8 @@ you:
   problem never fails the build (see [Warnings](#warnings) for what does).
 - **Every cache type, autodetected.** It caches Gradle, Maven, npm, pip, Sonar, Playwright,
   Cypress, and Docker content automatically, with no per-type configuration.
-- **Cache images that work out of the box.** Images are generated per job and isolated by
-  runner operating system and architecture, with smart fallbacks to the base branch and
+- **Cache images that work out of the box.** Images are generated per repository and job and
+  isolated by runner operating system and architecture, with smart fallbacks to the base branch and
   the repository default branch, so new branches restore instead of starting cold.
 - **A verified, tested CLI.** The action downloads a checksum-verified CLI JAR and defaults
   to the version pinned and tested for this release, so you do not track CLI versions or
@@ -601,9 +601,10 @@ A cache **miss** is expected: it is not a failure and never warns.
 ## Cache image names
 
 Each cache is keyed by an **image name**. By default you set none: the Artifact Cache CLI
-auto-generates one from the workflow, job, git ref, runner operating system, and runner
-architecture, so every job gets its own cache and jobs on different operating systems or
-architectures stay isolated.
+auto-generates one from the repository ID, workflow, job, git ref, runner operating system,
+and runner architecture, so every job gets its own cache, repositories never share one, and
+jobs on different operating systems or architectures stay isolated. The repository ID does
+not change when a repository is renamed or transferred, so neither starts the cache cold.
 
 ### Fallback to another branch's cache
 
